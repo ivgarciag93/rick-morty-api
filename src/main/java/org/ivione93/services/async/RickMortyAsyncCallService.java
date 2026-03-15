@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
-public class RickMortyAsynCallService extends AsyncCallService {
+public class RickMortyAsyncCallService extends AsyncCallService {
 
   @Inject
   RickMortyProvider rickMortyService;

@@ -7,7 +7,7 @@ import org.ivione93.dto.CharacterResponse;
 import org.ivione93.dto.CharactersResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
-import org.ivione93.services.async.RickMortyAsynCallService;
+import org.ivione93.services.async.RickMortyAsyncCallService;
 import org.ivione93.services.converters.RickMortyConverter;
 
 import java.util.concurrent.CompletableFuture;
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class RickMortyService {
 
   @Inject
-  RickMortyAsynCallService rickMortyAsynCallService;
+  RickMortyAsyncCallService rickMortyAsynCallService;
 
   @Inject
   RickMortyConverter rickMortyConverter;
