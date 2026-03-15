@@ -6,8 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import org.ivione93.dto.rickmortyapi.CharacterResponse;
-import org.ivione93.dto.rickmortyapi.CharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
 import org.ivione93.services.RickMortyService;
 
 @ApplicationScoped
@@ -18,14 +18,14 @@ public class RickMortyApi {
 
   @GET
   @Path("/character/{characterId}")
-  public CharacterResponse getCharacter(@PathParam("characterId") int characterId) {
+  public ApiCharacterResponse getCharacter(@PathParam("characterId") int characterId) {
     Log.infof("Call to getCharacter by id %d", characterId);
     return rickMortyService.getCharacter(characterId);
   }
 
   @GET
   @Path("/character")
-  public CharactersResponse getCharacters() {
+  public ApiCharactersResponse getCharacters() {
     Log.info("Call to getCharacters");
     return rickMortyService.getCharacters();
   }

@@ -3,7 +3,7 @@ package org.ivione93.dto.rickmortyapi;
 import java.time.Instant;
 import java.util.List;
 
-public class CharacterResponse {
+public class ApiCharacterResponse {
   public String id;
   public String name;
   public String status;

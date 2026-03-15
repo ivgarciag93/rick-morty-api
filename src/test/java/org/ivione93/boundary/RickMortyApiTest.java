@@ -2,8 +2,8 @@ package org.ivione93.boundary;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
-import org.ivione93.dto.rickmortyapi.CharacterResponse;
-import org.ivione93.dto.rickmortyapi.CharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
 import org.ivione93.services.RickMortyService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +21,7 @@ public class RickMortyApiTest {
 
     @Test
     public void testGetCharacters() {
-        CharactersResponse mockResponse = new CharactersResponse();
+        ApiCharactersResponse mockResponse = new ApiCharactersResponse();
         mockResponse.results = Collections.emptyList();
         
         Mockito.when(rickMortyService.getCharacters()).thenReturn(mockResponse);
@@ -34,7 +34,7 @@ public class RickMortyApiTest {
 
     @Test
     public void testGetCharacter() {
-        CharacterResponse mockResponse = new CharacterResponse();
+        ApiCharacterResponse mockResponse = new ApiCharacterResponse();
         mockResponse.id = "1";
         mockResponse.name = "Rick Sanchez";
         

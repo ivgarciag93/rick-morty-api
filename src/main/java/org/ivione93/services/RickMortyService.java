@@ -3,8 +3,8 @@ package org.ivione93.services;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.ivione93.dto.rickmortyapi.CharacterResponse;
-import org.ivione93.dto.rickmortyapi.CharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
+import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
 import org.ivione93.services.async.RickMortyAsynCallService;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,8 +15,8 @@ public class RickMortyService {
   @Inject
   RickMortyAsynCallService rickMortyAsynCallService;
 
-  public CharacterResponse getCharacter(final int characterId) {
-    CompletableFuture<CharacterResponse> characterResponse = rickMortyAsynCallService.getCharacter(characterId);
+  public ApiCharacterResponse getCharacter(final int characterId) {
+    CompletableFuture<ApiCharacterResponse> characterResponse = rickMortyAsynCallService.getCharacter(characterId);
 
     try {
       return characterResponse.join();
@@ -26,8 +26,8 @@ public class RickMortyService {
     }
   }
 
-  public CharactersResponse getCharacters() {
-    CompletableFuture<CharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters();
+  public ApiCharactersResponse getCharacters() {
+    CompletableFuture<ApiCharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters();
 
     try {
       return charactersResponse.join();
