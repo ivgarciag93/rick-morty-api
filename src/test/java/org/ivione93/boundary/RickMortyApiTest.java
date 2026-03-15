@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 @QuarkusTest
 class RickMortyApiTest {
 
-  private static final String GET_CHARACTERS_URI = "/v1/rickmorty/character";
-  private static final String GET_CHARACTER_URI = "/v1/rickmorty/character/{characterId}";
+  private static final String GET_CHARACTERS_URI = "/v1/rickmorty/characters";
+  private static final String GET_CHARACTER_URI = "/v1/rickmorty/characters/{characterId}";
 
   @RestClient
   @InjectSpy

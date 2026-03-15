@@ -17,14 +17,14 @@ public class RickMortyApi {
   @Inject RickMortyService rickMortyService;
 
   @GET
-  @Path("/character")
+  @Path("/characters")
   public CharactersResponse getCharacters() {
     Log.info("Call to getCharacters");
     return rickMortyService.getCharacters();
   }
 
   @GET
-  @Path("/character/{characterId}")
+  @Path("/characters/{characterId}")
   public CharacterResponse getCharacter(@PathParam("characterId") int characterId) {
     Log.infof("Call to getCharacter by id %d", characterId);
     return rickMortyService.getCharacter(characterId);
