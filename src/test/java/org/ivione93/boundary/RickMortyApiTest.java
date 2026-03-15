@@ -2,9 +2,10 @@ package org.ivione93.boundary;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
-import org.ivione93.services.RickMortyService;
+import org.ivione93.services.dataservices.RickMortyDataService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,14 +20,15 @@ class RickMortyApiTest {
   private static final String GET_CHARACTERS_URI = "/v1/rickmorty/character";
   private static final String GET_CHARACTER_URI = "/v1/rickmorty/character/{characterId}";
 
+  @RestClient
   @InjectSpy
-  RickMortyService rickMortyService;
+  RickMortyDataService rickMortyDataService;
 
   @Test
   void testGetCharacters() {
     ApiCharactersResponse mockResponse = createCharactersResponse();
 
-    when(rickMortyService.getCharacters()).thenReturn(mockResponse);
+    when(rickMortyDataService.getCharacters()).thenReturn(mockResponse);
 
     given()
         .when().get(GET_CHARACTERS_URI)
@@ -37,7 +39,7 @@ class RickMortyApiTest {
 
   @Test
   void testGetCharacters_Failure() {
-    when(rickMortyService.getCharacters()).thenThrow(new RuntimeException("Error"));
+    when(rickMortyDataService.getCharacters()).thenThrow(new RuntimeException("Error"));
 
     given()
         .when().get(GET_CHARACTERS_URI)
@@ -49,7 +51,7 @@ class RickMortyApiTest {
   void testGetCharacter() {
     ApiCharacterResponse mockRick = createCharacter("1", "Rick Sanchez");
 
-    when(rickMortyService.getCharacter(1)).thenReturn(mockRick);
+    when(rickMortyDataService.getCharacter(1)).thenReturn(mockRick);
 
     given()
         .pathParam("characterId", 1)
@@ -62,7 +64,7 @@ class RickMortyApiTest {
 
   @Test
   void testGetCharacter_Failure() {
-    when(rickMortyService.getCharacter(1)).thenThrow(new RuntimeException("Error"));
+    when(rickMortyDataService.getCharacter(1)).thenThrow(new RuntimeException("Error"));
 
     given()
         .pathParam("characterId", 1)

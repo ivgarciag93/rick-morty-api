@@ -16,22 +16,22 @@ public class RickMortyAsynCallService extends AsyncCallService {
   @Inject
   RickMortyProvider rickMortyService;
 
-  public CompletableFuture<ApiCharacterResponse> getCharacter(final int characterId) {
-    return managedExecutor
-        .supplyAsync(() -> rickMortyService.getCharacter(characterId))
-        .orTimeout(timeoutMilliseconds, TimeUnit.MILLISECONDS)
-        .exceptionally(ex -> {
-          Log.errorf(ex, "Error obtaining character info in Rick and Morty API");
-          throw toCompletionException(ex);
-        });
-  }
-
   public CompletableFuture<ApiCharactersResponse> getCharacters() {
     return managedExecutor
         .supplyAsync(() -> rickMortyService.getCharacters())
         .orTimeout(timeoutMilliseconds, TimeUnit.MILLISECONDS)
         .exceptionally(ex -> {
           Log.errorf(ex, "Error obtaining characters info in Rick and Morty API");
+          throw toCompletionException(ex);
+        });
+  }
+
+  public CompletableFuture<ApiCharacterResponse> getCharacter(final int characterId) {
+    return managedExecutor
+        .supplyAsync(() -> rickMortyService.getCharacter(characterId))
+        .orTimeout(timeoutMilliseconds, TimeUnit.MILLISECONDS)
+        .exceptionally(ex -> {
+          Log.errorf(ex, "Error obtaining character info in Rick and Morty API");
           throw toCompletionException(ex);
         });
   }
