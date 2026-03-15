@@ -2,10 +2,10 @@ package org.ivione93.dto.rickmortyapi;
 
 import java.util.List;
 
-public class CharactersResponse {
+public class ApiCharactersResponse {
 
   public Info info;
-  public List<CharacterResponse> results;
+  public List<ApiCharacterResponse> results;
 
   public static class Info {
     public int count;
