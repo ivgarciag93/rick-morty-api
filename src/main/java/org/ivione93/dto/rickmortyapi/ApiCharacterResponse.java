@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class ApiCharacterResponse {
-  public String id;
+  public Integer id;
   public String name;
   public String status;
   public String species;

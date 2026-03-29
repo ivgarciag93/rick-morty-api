@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CharacterResponse(
-      String id,
+      Integer id,
       String name,
       String status,
       String species,
