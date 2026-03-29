@@ -1,5 +1,7 @@
 package org.ivione93.services.providers;
 
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
@@ -11,6 +13,7 @@ public class RickMortyProvider {
 
   @RestClient RickMortyDataService rickMortyDataService;
 
+  @CacheResult(cacheName = "character-cache")
   public ApiCharacterResponse getCharacter(final int characterId) {
     return rickMortyDataService.getCharacter(characterId);
   }
@@ -18,5 +21,8 @@ public class RickMortyProvider {
   public ApiCharactersResponse getCharacters() {
     return rickMortyDataService.getCharacters();
   }
+
+  @CacheInvalidateAll(cacheName = "character-cache")
+  public static void invalidateCache() {}
 
 }

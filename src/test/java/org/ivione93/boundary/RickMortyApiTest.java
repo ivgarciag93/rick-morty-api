@@ -2,10 +2,14 @@ package org.ivione93.boundary;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
+import org.ivione93.entity.Character;
 import org.ivione93.services.dataservices.RickMortyDataService;
+import org.ivione93.services.providers.RickMortyProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,6 +27,13 @@ class RickMortyApiTest {
   @RestClient
   @InjectSpy
   RickMortyDataService rickMortyDataService;
+
+  @BeforeEach
+  @Transactional
+  void setUp() {
+    Character.deleteAll();
+    RickMortyProvider.invalidateCache();
+  }
 
   @Test
   void testGetCharacters() {
@@ -49,7 +60,7 @@ class RickMortyApiTest {
 
   @Test
   void testGetCharacter() {
-    ApiCharacterResponse mockRick = createCharacter("1", "Rick Sanchez");
+    ApiCharacterResponse mockRick = createCharacter(1, "Rick Sanchez");
 
     when(rickMortyDataService.getCharacter(1)).thenReturn(mockRick);
 
@@ -58,7 +69,7 @@ class RickMortyApiTest {
         .when().get(GET_CHARACTER_URI)
         .then()
         .statusCode(200)
-        .body("id", is("1"))
+        .body("id", is(1))
         .body("name", is("Rick Sanchez"));
   }
 
@@ -74,8 +85,8 @@ class RickMortyApiTest {
   }
 
   private static ApiCharactersResponse createCharactersResponse() {
-    ApiCharacterResponse mockRick = createCharacter("1", "Rick Sanchez");
-    ApiCharacterResponse mockMorty = createCharacter("2", "Morty Smith");
+    ApiCharacterResponse mockRick = createCharacter(1, "Rick Sanchez");
+    ApiCharacterResponse mockMorty = createCharacter(2, "Morty Smith");
     ApiCharactersResponse.Info mockInfo = createInfo();
     ApiCharactersResponse mockResponse = new ApiCharactersResponse();
     mockResponse.results = List.of(mockRick, mockMorty);
@@ -83,10 +94,13 @@ class RickMortyApiTest {
     return mockResponse;
   }
 
-  private static ApiCharacterResponse createCharacter(final String id, final String name) {
+  private static ApiCharacterResponse createCharacter(final Integer id, final String name) {
     ApiCharacterResponse mockRick = new ApiCharacterResponse();
     mockRick.id = id;
     mockRick.name = name;
+    mockRick.status = "Alive";
+    mockRick.gender = "Male";
+    mockRick.species = "Human";
     return mockRick;
   }
 

@@ -1,6 +1,7 @@
 package org.ivione93.boundary;
 
 import io.quarkus.logging.Log;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -25,6 +26,7 @@ public class RickMortyApi {
 
   @GET
   @Path("/characters/{characterId}")
+  @RunOnVirtualThread
   public CharacterResponse getCharacter(@PathParam("characterId") int characterId) {
     Log.infof("Call to getCharacter by id %d", characterId);
     return rickMortyService.getCharacter(characterId);

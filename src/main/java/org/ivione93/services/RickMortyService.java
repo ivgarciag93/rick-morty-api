@@ -15,11 +15,9 @@ import java.util.concurrent.CompletableFuture;
 @ApplicationScoped
 public class RickMortyService {
 
-  @Inject
-  RickMortyAsyncCallService rickMortyAsynCallService;
-
-  @Inject
-  RickMortyConverter rickMortyConverter;
+  @Inject CharactersService charactersService;
+  @Inject RickMortyAsyncCallService rickMortyAsynCallService;
+  @Inject RickMortyConverter rickMortyConverter;
 
   public CharactersResponse getCharacters() {
     CompletableFuture<ApiCharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters();
@@ -33,13 +31,30 @@ public class RickMortyService {
   }
 
   public CharacterResponse getCharacter(final int characterId) {
-    CompletableFuture<ApiCharacterResponse> characterResponse = rickMortyAsynCallService.getCharacter(characterId);
+    Log.infof("Fetching in DB character by id %d", characterId);
 
-    try {
-      return rickMortyConverter.mapToCharacter(characterResponse.join());
-    } catch (final Exception ex) {
-      Log.errorf(ex, "Error while obtaining character info");
-      throw new RuntimeException(ex);
-    }
+    return charactersService.findById(characterId)
+        .map(character -> new CharacterResponse(
+            character.id,
+            character.name,
+            character.status,
+            character.specie,
+            character.gender,
+            new CharacterResponse.Origin("unknown", "unknown"),
+            new CharacterResponse.Location("unknown", "unknown"),
+            character.image))
+        .orElseGet(() -> {
+          try {
+            Log.infof("Character %d not found in DB, fetching from API", characterId);
+            CompletableFuture<ApiCharacterResponse> charactersResponse =
+                rickMortyAsynCallService.getCharacter(characterId);
+            ApiCharacterResponse apiCharacterResponse = charactersResponse.join();
+            charactersService.saveCharacter(apiCharacterResponse);
+            return rickMortyConverter.mapToCharacter(apiCharacterResponse);
+          } catch (Exception ex) {
+            Log.errorf(ex, "Error while obtaining character info");
+            throw new RuntimeException(ex);
+          }
+        });
   }
 }
