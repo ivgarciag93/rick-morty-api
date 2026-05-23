@@ -53,6 +53,12 @@ You can then execute your native executable with: `./target/rick-morty-api-1.0.0
 
 If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
 
+## Docker
+You can create a local database:
+```shell script
+docker run --name rick-morty -e POSTGRES_DB=rick-morty -e POSTGRES_USER=rickmorty -e POSTGRES_PASSWORD=rickmorty -dp 5432:5432 postgres
+```
+
 ## Related Guides
 
 - REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
