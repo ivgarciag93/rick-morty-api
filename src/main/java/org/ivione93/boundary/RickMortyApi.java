@@ -32,4 +32,10 @@ public class RickMortyApi {
     return rickMortyService.getCharacter(characterId);
   }
 
+  @GET
+  @Path("/mock")
+  public void mockEndpoint() {
+    Log.info("Call to mockEndpoint");
+  }
+
 }
