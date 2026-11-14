@@ -4,6 +4,7 @@ import io.quarkus.logging.Log;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -24,8 +25,7 @@ import org.ivione93.services.RickMortyService;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(
     name = "Rick & Morty",
-    description = "Operaciones de consulta para personajes del universo de Rick and Morty"
-)
+    description = "Operaciones de consulta para personajes del universo de Rick and Morty")
 public class RickMortyApi {
 
   @Inject RickMortyService rickMortyService;
@@ -35,29 +35,35 @@ public class RickMortyApi {
   @RunOnVirtualThread
   @Operation(
       summary = "Obtener listado de personajes",
-      description = "Recupera la lista paginada de personajes de Rick and Morty obtenidos desde la API remota."
-  )
-  @APIResponses(value = {
-      @APIResponse(
-          responseCode = "200",
-          description = "Listado de personajes obtenido exitosamente",
-          content = @Content(
-              mediaType = MediaType.APPLICATION_JSON,
-              schema = @Schema(implementation = CharactersResponse.class)
-          )
-      ),
-      @APIResponse(
-          responseCode = "500",
-          description = "Error interno del servidor al consultar la API remota",
-          content = @Content(
-              mediaType = MediaType.APPLICATION_JSON,
-              schema = @Schema(implementation = ErrorResponse.class)
-          )
-      )
-  })
-  public CharactersResponse getCharacters() {
-    Log.info("Call to getCharacters");
-    return rickMortyService.getCharacters();
+      description =
+          "Recupera la lista paginada de personajes de Rick and Morty obtenidos desde la API remota.")
+  @APIResponses(
+      value = {
+        @APIResponse(
+            responseCode = "200",
+            description = "Listado de personajes obtenido exitosamente",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CharactersResponse.class))),
+        @APIResponse(
+            responseCode = "500",
+            description = "Error interno del servidor al consultar la API remota",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class)))
+      })
+  public CharactersResponse getCharacters(
+      @Parameter(
+          description = "Número de página a consultar en el catálogo de personajes",
+          example = "1",
+          schema = @Schema(defaultValue = "1", minimum = "1"))
+      @QueryParam("page")
+      @DefaultValue("1")
+      int page) {
+    Log.infof("Call to getCharacters (page %d)", page);
+    return rickMortyService.getCharacters(page);
   }
 
   @GET
@@ -65,35 +71,31 @@ public class RickMortyApi {
   @RunOnVirtualThread
   @Operation(
       summary = "Obtener personaje por ID",
-      description = "Busca un personaje por su identificador numérico en la base de datos local; si no existe, lo consulta en la API externa y lo persiste."
-  )
-  @APIResponses(value = {
-      @APIResponse(
-          responseCode = "200",
-          description = "Personaje encontrado exitosamente",
-          content = @Content(
-              mediaType = MediaType.APPLICATION_JSON,
-              schema = @Schema(implementation = CharacterResponse.class)
-          )
-      ),
-      @APIResponse(
-          responseCode = "500",
-          description = "Error interno del servidor al recuperar o sincronizar el personaje",
-          content = @Content(
-              mediaType = MediaType.APPLICATION_JSON,
-              schema = @Schema(implementation = ErrorResponse.class)
-          )
-      )
-  })
+      description =
+          "Busca un personaje por su identificador numérico en la base de datos local; si no existe, lo consulta en la API externa y lo persiste.")
+  @APIResponses(
+      value = {
+        @APIResponse(
+            responseCode = "200",
+            description = "Personaje encontrado exitosamente",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CharacterResponse.class))),
+        @APIResponse(
+            responseCode = "500",
+            description = "Error interno del servidor al recuperar o sincronizar el personaje",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class)))
+      })
   public CharacterResponse getCharacter(
-      @Parameter(
-          description = "Identificador único del personaje",
-          required = true,
-          example = "1"
-      )
-      @PathParam("characterId") int characterId) {
+      @Parameter(description = "Identificador del personaje", required = true, example = "1")
+          @PathParam("characterId")
+          @Positive
+          int characterId) {
     Log.infof("Call to getCharacter by id %d", characterId);
     return rickMortyService.getCharacter(characterId);
   }
-
 }

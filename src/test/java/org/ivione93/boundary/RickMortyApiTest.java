@@ -16,6 +16,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -39,9 +40,10 @@ class RickMortyApiTest {
   void testGetCharacters() {
     ApiCharactersResponse mockResponse = createCharactersResponse();
 
-    when(rickMortyDataService.getCharacters()).thenReturn(mockResponse);
+    when(rickMortyDataService.getCharacters(anyInt())).thenReturn(mockResponse);
 
     given()
+        .queryParam("page", 1)
         .when().get(GET_CHARACTERS_URI)
         .then()
         .statusCode(200)
@@ -50,7 +52,7 @@ class RickMortyApiTest {
 
   @Test
   void testGetCharacters_Failure() {
-    when(rickMortyDataService.getCharacters()).thenThrow(new RuntimeException("Error"));
+    when(rickMortyDataService.getCharacters(anyInt())).thenThrow(new RuntimeException("Error"));
 
     given()
         .when().get(GET_CHARACTERS_URI)

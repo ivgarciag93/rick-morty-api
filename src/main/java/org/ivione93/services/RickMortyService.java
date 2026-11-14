@@ -19,8 +19,8 @@ public class RickMortyService {
   @Inject RickMortyAsyncCallService rickMortyAsynCallService;
   @Inject RickMortyConverter rickMortyConverter;
 
-  public CharactersResponse getCharacters() {
-    CompletableFuture<ApiCharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters();
+  public CharactersResponse getCharacters(final int page) {
+    CompletableFuture<ApiCharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters(page);
 
     try {
       return rickMortyConverter.mapToCharacters(charactersResponse.join());

@@ -16,9 +16,9 @@ public class RickMortyAsyncCallService extends AsyncCallService {
   @Inject
   RickMortyProvider rickMortyService;
 
-  public CompletableFuture<ApiCharactersResponse> getCharacters() {
+  public CompletableFuture<ApiCharactersResponse> getCharacters(final int page) {
     return managedExecutor
-        .supplyAsync(() -> rickMortyService.getCharacters())
+        .supplyAsync(() -> rickMortyService.getCharacters(page))
         .orTimeout(timeoutMilliseconds, TimeUnit.MILLISECONDS)
         .exceptionally(ex -> {
           Log.errorf(ex, "Error obtaining characters info in Rick and Morty API");
