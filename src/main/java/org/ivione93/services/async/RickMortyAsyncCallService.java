@@ -5,6 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiLocationsResponse;
 import org.ivione93.services.providers.RickMortyProvider;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 @ApplicationScoped
 public class RickMortyAsyncCallService extends AsyncCallService {
 
-  @Inject
-  RickMortyProvider rickMortyService;
+  @Inject RickMortyProvider rickMortyService;
 
   public CompletableFuture<ApiCharactersResponse> getCharacters(final int page) {
     return managedExecutor
@@ -36,4 +36,13 @@ public class RickMortyAsyncCallService extends AsyncCallService {
         });
   }
 
+  public CompletableFuture<ApiLocationsResponse> getLocations(final int page) {
+    return managedExecutor
+        .supplyAsync(() -> rickMortyService.getLocations(page))
+        .orTimeout(timeoutMilliseconds, TimeUnit.MILLISECONDS)
+        .exceptionally(ex -> {
+          Log.errorf(ex, "Error obtaining locations info in Rick and Morty API");
+          throw toCompletionException(ex);
+        });
+  }
 }

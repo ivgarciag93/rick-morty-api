@@ -17,6 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.ivione93.dto.CharacterResponse;
 import org.ivione93.dto.CharactersResponse;
 import org.ivione93.dto.ErrorResponse;
+import org.ivione93.dto.LocationsResponse;
 import org.ivione93.services.RickMortyService;
 
 @ApplicationScoped
@@ -35,8 +36,7 @@ public class RickMortyApi {
   @RunOnVirtualThread
   @Operation(
       summary = "Obtener listado de personajes",
-      description =
-          "Recupera la lista paginada de personajes de Rick and Morty obtenidos desde la API remota.")
+      description = "Recupera la lista paginada de personajes de Rick and Morty API.")
   @APIResponses(
       value = {
         @APIResponse(
@@ -56,12 +56,12 @@ public class RickMortyApi {
       })
   public CharactersResponse getCharacters(
       @Parameter(
-          description = "Número de página a consultar en el catálogo de personajes",
-          example = "1",
-          schema = @Schema(defaultValue = "1", minimum = "1"))
-      @QueryParam("page")
-      @DefaultValue("1")
-      int page) {
+              description = "Número de página a consultar en el catálogo de personajes",
+              example = "1",
+              schema = @Schema(defaultValue = "1", minimum = "1"))
+          @QueryParam("page")
+          @DefaultValue("1")
+          int page) {
     Log.infof("Call to getCharacters (page %d)", page);
     return rickMortyService.getCharacters(page);
   }
@@ -97,5 +97,40 @@ public class RickMortyApi {
           int characterId) {
     Log.infof("Call to getCharacter by id %d", characterId);
     return rickMortyService.getCharacter(characterId);
+  }
+
+  @GET
+  @Path("/locations")
+  @RunOnVirtualThread
+  @Operation(
+      summary = "Obtener listado de ubicaciones",
+      description = "Recupera la lista paginada de ubicaciones de Rick and Morty API.")
+  @APIResponses(
+      value = {
+        @APIResponse(
+            responseCode = "200",
+            description = "Listado de ubicaciones obtenido exitosamente",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = LocationsResponse.class))),
+        @APIResponse(
+            responseCode = "500",
+            description = "Error interno del servidor al consultar la API remota",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class)))
+      })
+  public LocationsResponse getLocations(
+      @Parameter(
+              description = "Número de página a consultar en el catálogo de ubicaciones",
+              example = "1",
+              schema = @Schema(defaultValue = "1", minimum = "1"))
+          @QueryParam("page")
+          @DefaultValue("1")
+          int page) {
+    Log.infof("Call to getLocations (page %d)", page);
+    return rickMortyService.getLocations(page);
   }
 }

@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiLocationsResponse;
 import org.ivione93.services.dataservices.RickMortyDataService;
 
 @ApplicationScoped
@@ -25,4 +26,7 @@ public class RickMortyProvider {
   @CacheInvalidateAll(cacheName = "character-cache")
   public static void invalidateCache() {}
 
+  public ApiLocationsResponse getLocations(final int page) {
+    return rickMortyDataService.getLocations(page);
+  }
 }

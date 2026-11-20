@@ -8,6 +8,7 @@ import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiLocationsResponse;
 
 @Path("/api")
 @RegisterRestClient(configKey = "rickmorty")
@@ -22,4 +23,7 @@ public interface RickMortyDataService {
   @Path("/character")
   ApiCharactersResponse getCharacters(@QueryParam("page") int page);
 
+  @GET
+  @Path("/location")
+  ApiLocationsResponse getLocations(@QueryParam("page") int page);
 }

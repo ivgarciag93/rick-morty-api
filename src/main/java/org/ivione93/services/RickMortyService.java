@@ -5,8 +5,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ivione93.dto.CharacterResponse;
 import org.ivione93.dto.CharactersResponse;
+import org.ivione93.dto.LocationsResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
+import org.ivione93.dto.rickmortyapi.ApiLocationsResponse;
+import org.ivione93.mapper.LocationsMapper;
 import org.ivione93.services.async.RickMortyAsyncCallService;
 import org.ivione93.services.converters.RickMortyConverter;
 
@@ -19,8 +22,11 @@ public class RickMortyService {
   @Inject RickMortyAsyncCallService rickMortyAsynCallService;
   @Inject RickMortyConverter rickMortyConverter;
 
+  @Inject LocationsMapper locationsMapper;
+
   public CharactersResponse getCharacters(final int page) {
-    CompletableFuture<ApiCharactersResponse> charactersResponse = rickMortyAsynCallService.getCharacters(page);
+    CompletableFuture<ApiCharactersResponse> charactersResponse =
+        rickMortyAsynCallService.getCharacters(page);
 
     try {
       return rickMortyConverter.mapToCharacters(charactersResponse.join());
@@ -33,16 +39,18 @@ public class RickMortyService {
   public CharacterResponse getCharacter(final int characterId) {
     Log.infof("Fetching in DB character by id %d", characterId);
 
-    return charactersService.findById(characterId)
-        .map(character -> new CharacterResponse(
-            character.id,
-            character.name,
-            character.status,
-            character.specie,
-            character.gender,
-            new CharacterResponse.Origin("unknown", "unknown"),
-            new CharacterResponse.Location("unknown", "unknown"),
-            character.image))
+    return charactersService
+        .findById(characterId)
+        .map(character ->
+            new CharacterResponse(
+                character.id,
+                character.name,
+                character.status,
+                character.specie,
+                character.gender,
+                new CharacterResponse.Origin("unknown", "unknown"),
+                new CharacterResponse.Location("unknown", "unknown"),
+                character.image))
         .orElseGet(() -> {
           try {
             Log.infof("Character %d not found in DB, fetching from API", characterId);
@@ -56,5 +64,17 @@ public class RickMortyService {
             throw new RuntimeException(ex);
           }
         });
+  }
+
+  public LocationsResponse getLocations(final int page) {
+    CompletableFuture<ApiLocationsResponse> locationsResponse =
+        rickMortyAsynCallService.getLocations(page);
+
+    try {
+      return locationsMapper.mapToResponse(locationsResponse.join());
+    } catch (final Exception ex) {
+      Log.errorf(ex, "Error while obtaining locations info");
+      throw new RuntimeException(ex);
+    }
   }
 }
