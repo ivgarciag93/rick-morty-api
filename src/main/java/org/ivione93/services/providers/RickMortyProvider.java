@@ -18,8 +18,8 @@ public class RickMortyProvider {
     return rickMortyDataService.getCharacter(characterId);
   }
 
-  public ApiCharactersResponse getCharacters() {
-    return rickMortyDataService.getCharacters();
+  public ApiCharactersResponse getCharacters(final int page) {
+    return rickMortyDataService.getCharacters(page);
   }
 
   @CacheInvalidateAll(cacheName = "character-cache")

@@ -4,6 +4,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.ivione93.dto.rickmortyapi.ApiCharacterResponse;
 import org.ivione93.dto.rickmortyapi.ApiCharactersResponse;
@@ -19,6 +20,6 @@ public interface RickMortyDataService {
 
   @GET
   @Path("/character")
-  ApiCharactersResponse getCharacters();
+  ApiCharactersResponse getCharacters(@QueryParam("page") int page);
 
 }
